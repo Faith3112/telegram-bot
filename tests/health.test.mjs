@@ -11,7 +11,7 @@ function baseConfig(overrides = {}) {
     horizonUrl: "https://horizon-testnet.stellar.org",
     networkPassphrase: "Test SDF Network ; September 2015",
     botToken: "0000000000:SECRET-TOKEN-DO-NOT-LEAK",
-    chatId: "-1001234567890",
+    chatIds: ["-1001234567890"],
     pollIntervalMs: 30_000,
     startLookbackLedgers: 60,
     cursorFile: "./data/cursor.json",
@@ -91,7 +91,7 @@ test("buildHealthReport never embeds bot token or chat id", () => {
   const report = buildHealthReport(config, baseStatus(), 5_500);
   const blob = JSON.stringify(report);
   assert.equal(blob.includes(config.botToken), false);
-  assert.equal(blob.includes(config.chatId), false);
+  assert.equal(blob.includes(config.chatIds), false);
   assert.equal(blob.includes("SECRET-TOKEN"), false);
 });
 

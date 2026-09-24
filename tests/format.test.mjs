@@ -41,7 +41,7 @@ test("formatUsdc always renders all seven Stellar USDC decimals", () => {
 
 test("formatted money notifications keep explicit decimals and escape the decimal point", () => {
   const config = {
-    chatId: "-1001234567890",
+    chatIds: ["-1001234567890"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
@@ -70,7 +70,7 @@ test("formatted money notifications keep explicit decimals and escape the decima
 
 test("unknown or malformed decoded events stay non-notifying", () => {
   const config = {
-    chatId: "-1001234567890",
+    chatIds: ["-1001234567890"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
@@ -112,7 +112,7 @@ test("escapeMd matches the character-wise rule for deterministic fuzz inputs", (
 
 test("formatted untrusted event text reaches Telegram as exact MarkdownV2", async () => {
   const config = {
-    chatId: "-1001234567890",
+    chatIds: ["-1001234567890"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
@@ -152,7 +152,7 @@ test("formatted untrusted event text reaches Telegram as exact MarkdownV2", asyn
   await createNotifier(fakeBot, config)(message);
   assert.deepEqual(sent, [
     [
-      config.chatId,
+      config.chatIds[0],
       expectedMessage,
       {
         parse_mode: "MarkdownV2",
@@ -165,7 +165,7 @@ test("formatted untrusted event text reaches Telegram as exact MarkdownV2", asyn
 test("createNotifier preserves Telegram send failures for the poller", async () => {
   const error = new Error("Telegram API unavailable");
   const fakeBot = { api: { sendMessage: async () => Promise.reject(error) } };
-  const notify = createNotifier(fakeBot, { chatId: "-1001234567890" });
+  const notify = createNotifier(fakeBot, { chatIds: ["-1001234567890"] });
   await assert.rejects(notify("message"), error);
 });
 

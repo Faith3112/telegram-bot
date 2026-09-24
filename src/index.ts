@@ -40,7 +40,7 @@ async function main(): Promise<void> {
   console.log(`[boot] network      ${networkLabel(config)} (${config.rpcUrl})`);
   console.log(`[boot] market       ${config.marketContractId}`);
   console.log(`[boot] squad        ${config.squadContractId}`);
-  console.log(`[boot] chat         ${config.chatId}`);
+  console.log(`[boot] chats        ${config.chatIds.join(', ')}`);
   console.log(`[boot] cursor file  ${config.cursorFile}`);
 
   const server = createRpcServer(config);

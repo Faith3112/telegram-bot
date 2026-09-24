@@ -28,7 +28,7 @@ export interface StellarConfig {
 
 export interface BotConfig extends StellarConfig {
   botToken: string;
-  chatId: string;
+  chatIds: string[];
   pollIntervalMs: number;
   startLookbackLedgers: number;
   cursorFile: string;
@@ -136,16 +136,23 @@ function collector() {
       return parsed;
     },
 
-    chatId(name: string): string {
+    chatIds(name: string): string[] {
       const value = this.required(name);
-      // Telegram chat ids are integers (channels/supergroups are negative).
-      // A @channelusername also works for public channels, so both are allowed.
-      if (value !== "" && !/^-?\d+$/.test(value) && !/^@[A-Za-z0-9_]{4,}$/.test(value)) {
-        problems.push(
-          `${name} must be a numeric chat id (e.g. -1001234567890) or a @channelusername; got "${value}"`,
-        );
+      if (value === "") return [];
+      
+      const ids = value.split(",").map(s => s.trim()).filter(s => s !== "");
+      if (ids.length === 0) {
+        problems.push(`${name} is required but not set`);
+        return [];
       }
-      return value;
+      for (const id of ids) {
+        if (!/^-?\d+$/.test(id) && !/^@[A-Za-z0-9_]{4,}$/.test(id)) {
+          problems.push(
+            `${name} must contain numeric chat ids or @channelusernames; got "${id}"`,
+          );
+        }
+      }
+      return ids;
     },
 
     host(name: string, fallback: string): string {
@@ -191,7 +198,7 @@ export function loadConfig(): BotConfig {
   const config: BotConfig = {
     ...stellar,
     botToken: c.required("BOT_TOKEN"),
-    chatId: c.chatId("TELEGRAM_CHAT_ID"),
+    chatIds: c.chatIds("TELEGRAM_CHAT_ID"),
     pollIntervalMs: c.int("POLL_INTERVAL_MS", DEFAULTS.pollIntervalMs, DEFAULTS.minPollIntervalMs),
     startLookbackLedgers: c.int("START_LOOKBACK_LEDGERS", DEFAULTS.startLookbackLedgers, 0),
     cursorFile: path.resolve(process.cwd(), read("CURSOR_FILE") ?? DEFAULTS.cursorFile),
