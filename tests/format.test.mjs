@@ -164,7 +164,7 @@ test("formatted untrusted event text reaches Telegram as exact MarkdownV2", asyn
 
 test("oversized event fields are clipped safely before MarkdownV2 escaping", () => {
   const config = {
-    chatId: "-1001234567890",
+    chatIds: ["-1001234567890"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
@@ -194,7 +194,7 @@ test("oversized event fields are clipped safely before MarkdownV2 escaping", () 
 
 test("oversized squad questions are clipped without splitting emoji", () => {
   const config = {
-    chatId: "-1001234567890",
+    chatIds: ["-1001234567890"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
@@ -279,7 +279,7 @@ test("txExplorerUrl is centralized and network-aware", async () => {
 test("formatEvent prefixes message with [PREVIEW MODE] when channelPreviewMode is enabled", async () => {
   const { formatEvent } = await import("../dist/notifications/format.js");
   const config = {
-    chatId: "-1001234567890",
+    chatIds: ["-1001234567890"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
@@ -309,7 +309,7 @@ test("formatEvent prefixes message with [PREVIEW MODE] when channelPreviewMode i
 test("formatFallbackEvent formats actionable degraded event notification with redacted reason", async () => {
   const { formatFallbackEvent } = await import("../dist/notifications/format.js");
   const config = {
-    chatId: "-1001234567890",
+    chatIds: ["-1001234567890"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",

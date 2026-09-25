@@ -47,7 +47,7 @@ export interface StellarConfig {
 
 export interface BotConfig extends StellarConfig {
   botToken: string;
-  chatId: string;
+  chatIds: string[];
   /** Telegram user id allowed to run operator-only commands. Null disables them. */
   operatorTelegramUserId: string | null;
   pollIntervalMs: number;
@@ -210,7 +210,7 @@ function collector(profile: Record<string, string>) {
       return fallback;
     },
 
-    chatId(name: string): string {
+    chatIds(name: string): string[] {
       const value = this.required(name);
       if (value === "") return [];
       
@@ -282,7 +282,7 @@ export function loadConfig(): BotConfig {
   const config: BotConfig = {
     ...stellar,
     botToken: c.required("BOT_TOKEN"),
-    chatId: c.chatId("TELEGRAM_CHAT_ID"),
+    chatIds: c.chatIds("TELEGRAM_CHAT_ID"),
     operatorTelegramUserId: c.optionalUserId("OPERATOR_TELEGRAM_USER_ID"),
     pollIntervalMs: c.int("POLL_INTERVAL_MS", DEFAULTS.pollIntervalMs, DEFAULTS.minPollIntervalMs),
     startLookbackLedgers: c.int("START_LOOKBACK_LEDGERS", DEFAULTS.startLookbackLedgers, 0),

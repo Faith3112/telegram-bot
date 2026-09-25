@@ -370,7 +370,7 @@ test("formatEvent: long category in claim_created is clipped to the field limit"
   // claim_created renders the category directly; there is no clip() call there,
   // but it should still not throw or produce bad markdown.
   const config = {
-    chatId: "-1",
+    chatIds: ["-1"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
@@ -397,7 +397,7 @@ test("formatEvent: long category in claim_created is clipped to the field limit"
 
 test("formatEvent: claim_resolved summary is clipped at 200 characters", () => {
   const config = {
-    chatId: "-1",
+    chatIds: ["-1"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
@@ -430,7 +430,7 @@ test("formatEvent: claim_resolved summary is clipped at 200 characters", () => {
 
 test("formatEvent: market_created question is clipped at 200 characters", () => {
   const config = {
-    chatId: "-1",
+    chatIds: ["-1"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
@@ -462,7 +462,7 @@ test("formatEvent: market_created question is clipped at 200 characters", () => 
 
 test("formatEvent: unknown payload returns null", () => {
   const config = {
-    chatId: "-1",
+    chatIds: ["-1"],
     marketContractId: "market",
     squadContractId: "squad",
     rpcUrl: "https://soroban-testnet.stellar.org",
