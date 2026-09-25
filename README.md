@@ -255,6 +255,36 @@ This process is meant to stay up for weeks, so a single failure never ends it:
   Telegram retry loop already in progress. That cycle follows the normal cursor
   rules above; `/resume` starts the next cycle immediately.
 
+## Long-running operation
+
+The notifier is meant to run for weeks through Stellar RPC and Telegram outages.
+Everything it keeps in memory is fixed-size or capped:
+
+- Per-target state is two small records (cursor, last event ledger, last error).
+- A scan walks at most 20 event pages, and each cycle sends at most
+  `MAX_NOTIFICATIONS_PER_CYCLE` messages; the rest are counted as skipped.
+- Error text is redacted (bot token) and clipped before it reaches `/status`,
+  `/health`, or logs; unknown or malformed events are logged as one bounded line.
+- At most one poll timer is pending, and `stop()` leaves none behind.
+
+`tests/soak.test.mjs` enforces this offline: it drives about 1,700 poll cycles
+through a scripted fake RPC (outages, stale-cursor rejections, malformed and
+unknown events) with every Telegram send failing, under mocked timers. It asserts
+that heap growth after a forced GC stays under 4 MB, that status and every log
+line stay bounded and token-free, and that timers do not accumulate. A control
+test deliberately leaks per send and must trip the same threshold, so the check
+cannot silently stop working. It needs no Testnet, Telegram credentials, or keys.
+
+**Deployment assumptions:** one process per chat and cursor file (two writers
+would race on `CURSOR_FILE`), the cursor path on persistent storage, and a
+supervisor that restarts the process and probes `GET /health`. If you suspect a
+leak in production, watch the process RSS over days; a restart is always safe.
+
+**Rollback:** deploy the previous build and start it against the same
+`CURSOR_FILE`. The cursor format is unchanged (version 1) and the chain is the
+source of truth, so nothing is replayed beyond the last saved cursor and nothing
+needs migrating. Keep a copy of the cursor file if you want an exact resume point.
+
 ## Health endpoint
 
 The process exposes a **loopback HTTP** probe for supervisors and deploy

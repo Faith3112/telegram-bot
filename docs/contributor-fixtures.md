@@ -38,6 +38,7 @@ Do not wire `npm run scan` into automated tests.
 | `tests/format.test.mjs` | Inline event-formatting units (MarkdownV2, USDC, Telegram send failures) |
 | `tests/bot.test.mjs` | Mocked grammy operator-command routing and exact reply payloads |
 | `tests/poller.test.mjs` | Pause/resume boundaries, restart cursor compatibility, RPC failure redaction |
+| `tests/soak.test.mjs` | Long-run memory/timer/log boundedness under scripted RPC and Telegram failures (mock timers, forced GC, leak control) |
 | `tests/mock-rpc.test.mjs` | Live mock RPC: scanner walks, poller failure drills, cursor safety, log bounds |
 | `tests/mock-profile.test.mjs` | `MIMIR_PROFILE=mock` defaults, explicit-env precedence, unknown-profile failure |
 
